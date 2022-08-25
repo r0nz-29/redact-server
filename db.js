@@ -1,8 +1,11 @@
 import pg from 'pg';
 import "dotenv/config";
 
-const connectionString = process.env.DATABASE_URL;
-
-const pool = new pg.Pool({connectionString});
+const pool = new pg.Pool({
+	connectionString: process.env.DATABASE_URL,
+	ssl: {
+		rejectUnauthorized: false
+	}
+});
 
 export default pool;
