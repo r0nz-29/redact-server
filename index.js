@@ -13,11 +13,9 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-
 app.use("/auth", authRoutes);
 app.use("/questions", PROTECTED, questionRoutes);
 app.use("/lists", PROTECTED, listRoutes);
-
 app.use("/seed", seedRoutes);
 
 app.listen(process.env.PORT, () => {
