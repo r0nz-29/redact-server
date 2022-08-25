@@ -1,11 +1,11 @@
 import express from 'express';
 import bodyParser from "body-parser";
-import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import seedRoutes from './routes/seed.js';
 import questionRoutes from './routes/board.js';
 import listRoutes from './routes/list.js';
 import {PROTECTED} from "./middlewares/authMiddleware.js";
+import cors from 'cors';
 import "dotenv/config";
 
 const app = express();
