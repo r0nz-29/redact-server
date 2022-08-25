@@ -10,10 +10,6 @@ import {PROTECTED} from "./middlewares/authMiddleware.js";
 
 const app = express();
 
-/***
- * TODO: ADD AUTH MIDDLEWARE TO POST ROUTES !!!!
- */
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
