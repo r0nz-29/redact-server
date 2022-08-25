@@ -1,0 +1,110 @@
+import pool from "../db.js";
+
+export function addList(req, res, next) {
+	const {name, description} = req.body;
+	const owner = req.user.id;
+
+	if (!!name && !!owner && !!description) {
+		pool
+			.query("INSERT INTO lists(name, description, owner) VALUES($1, $2, $3)", [name, description, owner])
+			.then(result => {
+				next();
+			});
+	} else {
+		res.status(400).json({msg: "bad title or board id"});
+	}
+}
+
+export function deleteList(req, res, next) {
+	const {id} = req.params;
+	if (!!id) {
+		pool
+			.query("DELETE FROM lists WHERE id = $1", [id])
+			.then(result => {
+				next();
+			});
+	} else {
+		res.status(400).json({msg: "Bad list id"});
+	}
+}
+
+export function editList(req, res, next) {
+
+}
+
+export function getLists(req, res) {
+	pool
+		.query("SELECT * FROM lists WHERE owner = $1", [req.user.id])
+		.then(result => {
+			res.json(result.rows);
+		});
+}
+
+export function addCardToList(req, res, next) {
+	const {listId} = req.params;
+	const {title, details} = req.body;
+
+	if (!!listId && !!title) {
+		pool
+			.query("INSERT INTO cards(title, details, list) VALUES($1, $2, $3) RETURNING *", [title, details, listId])
+			.then(result => {
+				res.json(result.rows);
+			});
+	} else {
+		res.status(400).json({msg: "bad inputs"});
+	}
+}
+
+export function getPopulatedLists(req, res) {
+	if (!!req.user.id) {
+		pool
+			.query("SELECT * FROM lists WHERE owner = $1", [req.user.id])
+			.then(async result => {
+				for (const row of result.rows) {
+					pool
+						.query("SELECT * FROM questions WHERE list = $1", [row.id])
+						.then(result => {
+							row.questions = result.rows;
+							res.json(row);
+						})
+				}
+			});
+	} else {
+		res.status(400).json({msg: "Bad user id"});
+	}
+}
+
+export function getPopulatedList(req, res) {
+	const {listId} = req.params;
+
+	if (!!listId) {
+		pool
+			.query("SELECT * FROM lists where id = $1", [listId])
+			.then(result => {
+				const list = result.rows[0];
+
+				pool
+					.query("SELECT * FROM questions WHERE list = $1 ORDER BY id DESC", [listId])
+					.then(result => {
+						list.questions = result.rows;
+						res.json(list);
+					})
+			})
+	} else {
+		res.status(400).json({msg: "bad list id"});
+	}
+}
+
+export function addQuestionToList(req, res, next) {
+	const {name, link, solution, listId} = req.body;
+
+	if (!!name && !!link && !!solution && !!listId) {
+		pool
+			.query("INSERT INTO questions(name, link, solution, list) VALUES($1, $2, $3, $4)", [name, link, solution, listId])
+			.then(result => {
+				next();
+			})
+	} else {
+		res.status(400).json({msg:"bad input"})
+	}
+}
