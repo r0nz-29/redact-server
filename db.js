@@ -1,11 +1,15 @@
-import pg from 'pg';
+import pg from "pg";
 import "dotenv/config";
 
+const connectionString = process.env.DATABASE_URL+"?sslmode=require";
+
 const pool = new pg.Pool({
-	connectionString: process.env.DATABASE_URL,
-	ssl: {
-		rejectUnauthorized: false
-	}
+	connectionString: connectionString
+	// ssl: {
+	// 	rejectUnauthorized: false
+	// }
 });
+
+console.log(connectionString);
 
 export default pool;
