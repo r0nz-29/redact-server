@@ -6,11 +6,15 @@ import questionRoutes from './routes/board.js';
 import listRoutes from './routes/list.js';
 import {PROTECTED} from "./middlewares/authMiddleware.js";
 import cors from 'cors';
-import "dotenv/config";
+import {config} from "dotenv";
+// import "dotenv/config";
+
+config();
 
 const app = express();
 
 app.use(cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use("/auth", authRoutes);
