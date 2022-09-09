@@ -116,13 +116,15 @@ export function getBacklogs(req, res) {
 		.then(result => {
 			const questions = result.rows;
 
-			const backlogs = questions.map((question) => {
+			const backlogs = questions.filter((question) => {
 				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
 				// re-attempt
-				if (duration.hours >= 24 || duration.days >= 4)
-					return question;
+				if (duration.hours >= 24 && duration.days >= 4) {
+					return true;
+				}
+
+				return false;
 			});
-			console.log(backlogs);
 			res.status(200).json(backlogs);
 		});
 }
