@@ -119,7 +119,7 @@ export function getBacklogs(req, res) {
 			const backlogs = questions.filter((question) => {
 				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
 				// re-attempt
-				if (duration.hours >= 24 && duration.days >= 4) {
+				if (duration.hours >= 24 || duration.days >= 4) {
 					return true;
 				}
 
