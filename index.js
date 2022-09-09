@@ -7,7 +7,6 @@ import listRoutes from './routes/list.js';
 import {PROTECTED} from "./middlewares/authMiddleware.js";
 import cors from 'cors';
 import {config} from "dotenv";
-// import "dotenv/config";
 
 config();
 
@@ -25,4 +24,3 @@ app.use("/seed", seedRoutes);
 app.listen(process.env.PORT, () => {
   console.log("Server running at port: " + process.env.PORT);
 });
-

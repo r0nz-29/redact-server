@@ -1,4 +1,5 @@
 import pool from "../db.js";
+import {intervalToDuration} from "date-fns";
 
 export function addList(req, res, next) {
 	const {name, description} = req.body;
@@ -66,7 +67,7 @@ export function getPopulatedLists(req, res) {
 						.then(result => {
 							row.questions = result.rows;
 							res.json(row);
-						})
+						});
 				}
 			});
 	} else {
@@ -88,8 +89,8 @@ export function getPopulatedList(req, res) {
 					.then(result => {
 						list.questions = result.rows;
 						res.json(list);
-					})
-			})
+					});
+			});
 	} else {
 		res.status(400).json({msg: "bad list id"});
 	}
@@ -103,8 +104,25 @@ export function addQuestionToList(req, res, next) {
 			.query("INSERT INTO questions(name, link, solution, list) VALUES($1, $2, $3, $4)", [name, link, solution, listId])
 			.then(result => {
 				next();
-			})
+			});
 	} else {
-		res.status(400).json({msg:"bad input"})
+		res.status(400).json({msg: "bad input"});
 	}
+}
+
+export function getBacklogs(req, res) {
+	pool
+		.query("SELECT * FROM questions")
+		.then(result => {
+			const questions = result.rows;
+
+			const backlogs = questions.map((question) => {
+				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
+				// re-attempt
+				if (duration.hours >= 24 || duration.days >= 4)
+					return question;
+			});
+			console.log(backlogs);
+			res.status(200).json(backlogs);
+		});
 }
