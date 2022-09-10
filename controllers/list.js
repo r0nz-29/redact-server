@@ -112,19 +112,32 @@ export function addQuestionToList(req, res, next) {
 
 export function getBacklogs(req, res) {
 	pool
-		.query("SELECT * FROM questions")
+		.query("SELECT * FROM questions ORDER BY updated_at ASC LIMIT 5")
 		.then(result => {
 			const questions = result.rows;
 
 			const backlogs = questions.filter((question) => {
 				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
 				// re-attempt
-				if (duration.hours >= 24 || duration.days >= 4) {
-					return true;
-				}
-
-				return false;
+				return (duration.days >= 4);
 			});
+
 			res.status(200).json(backlogs);
+		});
+}
+
+export function getRecents(req, res) {
+	pool
+		.query("SELECT * FROM questions ORDER BY updated_at DESC LIMIT 5")
+		.then(result => {
+			const questions = result.rows;
+
+			const recents = questions.filter((question) => {
+				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
+				// new
+				return (duration.hours <= 24 && duration.days === 0 && question.submissions === 1);
+			});
+
+			res.status(200).json(recents);
 		});
 }
