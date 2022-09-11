@@ -128,7 +128,7 @@ export function getBacklogs(req, res) {
 
 export function getRecents(req, res) {
 	pool
-		.query("SELECT * FROM questions ORDER BY updated_at DESC LIMIT 5")
+		.query("SELECT * FROM questions ORDER BY updated_at DESC")
 		.then(result => {
 			const questions = result.rows;
 
@@ -137,7 +137,6 @@ export function getRecents(req, res) {
 				// new
 				return (duration.hours <= 24 && duration.days === 0 && question.submissions === 1);
 			});
-
 			res.status(200).json(recents);
 		});
 }
