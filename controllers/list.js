@@ -118,7 +118,7 @@ export function getBacklogs(req, res) {
 
 			const backlogs = questions.filter((question) => {
 				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
-				console.log("backlogs: " + duration);
+				// console.log("backlogs: " + duration);
 				// re-attempt
 				return (duration.days >= 4) || duration.months !== 0;
 			});
@@ -135,7 +135,7 @@ export function getRecents(req, res) {
 
 			const recents = questions.filter((question) => {
 				const duration = intervalToDuration({start: question.updated_at, end: new Date()});
-				console.log("new : " + duration);
+				// console.log("new : " + duration);
 				// new
 				return (duration.hours <= 24 && duration.days === 0 && duration.months === 0 && question.submissions === 1);
 			});
