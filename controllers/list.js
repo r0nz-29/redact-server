@@ -157,3 +157,20 @@ export function getResults(req, res) {
     res.status(400).json({msg: "bad search term"});
   }
 }
+
+export function getTotalCount(req, res) {
+  pool
+    .query("SELECT COUNT(*) FROM questions")
+    .then(result => {
+      res.status(200).json(result.rows);
+    });
+}
+
+export function getTotalLeetcodeCount(req, res) {
+  pool
+    .query("SELECT name FROM questions WHERE link LIKE '%leetcode%'")
+    .then(result => {
+      console.log(result.rows);
+      res.status(200).json({count: result.rows.length});
+    });
+}
