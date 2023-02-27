@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
+    "install": "cd client && yarn install && yarn build && cd ../",
     "dev": "nodemon index.js"
   },
   "dependencies": {
