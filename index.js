@@ -10,7 +10,6 @@ import {config} from "dotenv";
 import { dirname } from 'path';
 import path from "node:path";
 import { fileURLToPath } from 'url';
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 config();
